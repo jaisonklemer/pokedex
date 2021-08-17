@@ -18,5 +18,7 @@ data class PokemonListItem(
     val name: String,
 
     @SerializedName("url")
-    val url: String
+    val url: String,
+
+    var types: List<Types>
 )

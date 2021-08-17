@@ -27,6 +27,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var binding: MainFragmentBinding
 
     private val observerPokemons = Observer<PokemonList> {
+        viewModel.treatPokemonList(it)
+    }
+
+    private val observerPokemonList = Observer<PokemonList> {
         binding.recyclerViewPokemons.adapter = PokemonListAdapter(it.pokemons)
         binding.recyclerViewPokemons.layoutManager = LinearLayoutManager(requireContext())
     }
@@ -39,6 +43,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         viewModel.pokemons.observe(viewLifecycleOwner, observerPokemons)
+        viewModel.pokemonsList.observe(viewLifecycleOwner, observerPokemonList)
 
         viewModel.getPokemons()
     }
