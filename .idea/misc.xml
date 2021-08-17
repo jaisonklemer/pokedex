@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.30564102564102563" />
+        <entry key="app/src/main/res/drawable/ic_pattern.xml" value="0.30666666666666664" />
+        <entry key="app/src/main/res/drawable/ic_pokeball.xml" value="0.30666666666666664" />
+        <entry key="app/src/main/res/font-v26/sf_font_family.xml" value="0.32051282051282054" />
+        <entry key="app/src/main/res/font/sf_font_family.xml" value="0.32051282051282054" />
         <entry key="app/src/main/res/layout/main_fragment.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/pokemon_list_item.xml" value="0.375" />
       </map>
     </option>
   </component>

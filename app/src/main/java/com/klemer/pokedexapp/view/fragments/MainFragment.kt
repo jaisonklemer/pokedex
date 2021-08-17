@@ -6,8 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.klemer.pokedexapp.R
+import com.klemer.pokedexapp.adapters.PokemonListAdapter
+import com.klemer.pokedexapp.databinding.MainFragmentBinding
+import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.view_model.MainViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainFragment : Fragment(R.layout.main_fragment) {
 
@@ -16,10 +24,23 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var binding: MainFragmentBinding
 
+    private val observerPokemons = Observer<PokemonList> {
+        binding.recyclerViewPokemons.adapter = PokemonListAdapter(it.pokemons)
+        binding.recyclerViewPokemons.layoutManager = LinearLayoutManager(requireContext())
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding = MainFragmentBinding.bind(view)
+
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
+        viewModel.pokemons.observe(viewLifecycleOwner, observerPokemons)
+
+        viewModel.getPokemons()
     }
 
 }
