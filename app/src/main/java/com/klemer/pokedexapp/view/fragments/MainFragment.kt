@@ -35,6 +35,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
     private val observerPokemonList = Observer<PokemonList> {
+        showProgress(false)
         adapter.updateList(it.pokemons)
         binding.recyclerViewPokemons.layoutManager = linearLayoutManager
     }
@@ -67,7 +68,16 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
     private fun getPokemons() {
+        showProgress(true)
         viewModel.getPokemons()
+    }
+
+    private fun showProgress(show: Boolean) {
+        if (show) {
+            binding.loadingProgressBar.visibility = View.VISIBLE
+        } else {
+            binding.loadingProgressBar.visibility = View.GONE
+        }
     }
 
 }

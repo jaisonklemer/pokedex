@@ -31,6 +31,7 @@ class MainViewModel : ViewModel() {
         for (poke in list.pokemons) {
             repository.getSpecificPokemon(getPokemonId(poke)) {
                 poke.types = it.types
+                poke.id = it.id
                 count++
 
                 if (count == list.pokemons.size) {

@@ -1,6 +1,7 @@
 package com.klemer.pokedexapp.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYouListener
 import com.google.android.material.card.MaterialCardView
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.enums.PokemonImageEnum
@@ -18,6 +20,15 @@ import com.klemer.pokedexapp.enums.TypeColorEnum
 import com.klemer.pokedexapp.models.PokemonListItem
 import com.klemer.pokedexapp.models.Types
 import java.util.*
+import android.graphics.drawable.PictureDrawable
+import android.os.Handler
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
+
 
 class PokemonListAdapter() :
     RecyclerView.Adapter<PokemonListViewHolder>() {
@@ -110,17 +121,57 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         }
 
         itemView.findViewById<ImageView>(R.id.pokemonImageView).apply {
-            val imageUrl = PokemonImageEnum.IMAGE.url + (position + 1) + ".svg"
-
-            GlideToVectorYou
-                .init()
-                .with(context)
-                .load(Uri.parse(imageUrl), this)
-
+            val svgImageUrl = "${PokemonImageEnum.SVG.url}${pokemon.id}.svg"
+            loadImageUrl(svgImageUrl, this, pokemon.id, context)
         }
     }
 
-    private fun enumTypes(types: List<Types>) {
+    private fun loadImageUrl(
+        imageUrl: String,
+        imageView: ImageView,
+        pokemonId: Int,
+        context: Context
+    ) {
+        val pngImageUrl = "${PokemonImageEnum.PNG.url}$pokemonId.png"
+
+        val requestBuilder = GlideToVectorYou
+            .init()
+            .with(context)
+            .requestBuilder
+
+        requestBuilder
+            .load(imageUrl)
+            .listener(object : RequestListener<PictureDrawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<PictureDrawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+
+                    Handler().postDelayed(Runnable {
+                        Glide
+                            .with(context)
+                            .load(pngImageUrl)
+                            .into(imageView)
+                    }, 100)
+
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: PictureDrawable?,
+                    model: Any?,
+                    target: Target<PictureDrawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+
+            })
+            .into(imageView)
+
 
     }
 }

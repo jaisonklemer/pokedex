@@ -4,7 +4,10 @@ import com.google.gson.annotations.SerializedName
 
 data class PokemonItem(
     @SerializedName("types")
-    val types: List<Types>
+    val types: List<Types>,
+
+    @SerializedName("id")
+    val id: Int
 )
 
 data class Types(
