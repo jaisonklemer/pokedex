@@ -117,7 +117,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         }
 
         itemView.findViewById<TextView>(R.id.txtViewPokemonId).apply {
-            text = "#${position + 1}"
+            "#${pokemon.id}".also { text = it }
         }
 
         itemView.findViewById<ImageView>(R.id.pokemonImageView).apply {

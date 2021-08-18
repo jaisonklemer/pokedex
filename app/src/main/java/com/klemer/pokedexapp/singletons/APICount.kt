@@ -1,5 +1,5 @@
 package com.klemer.pokedexapp.singletons
 
 object APICount {
-    var offsetCount = 650
+    var offsetCount = 0
 }
