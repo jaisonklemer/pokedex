@@ -16,6 +16,8 @@ import com.klemer.pokedexapp.view_model.MainViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import androidx.recyclerview.widget.RecyclerView
+
 
 class MainFragment : Fragment(R.layout.main_fragment) {
 
@@ -25,14 +27,16 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var adapter: PokemonListAdapter
 
     private val observerPokemons = Observer<PokemonList> {
         viewModel.treatPokemonList(it)
     }
 
     private val observerPokemonList = Observer<PokemonList> {
-        binding.recyclerViewPokemons.adapter = PokemonListAdapter(it.pokemons)
-        binding.recyclerViewPokemons.layoutManager = LinearLayoutManager(requireContext())
+        adapter.updateList(it.pokemons)
+        binding.recyclerViewPokemons.layoutManager = linearLayoutManager
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,9 +46,27 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
+        linearLayoutManager = LinearLayoutManager(requireContext())
+
+        adapter = PokemonListAdapter()
+        binding.recyclerViewPokemons.adapter = adapter
+
         viewModel.pokemons.observe(viewLifecycleOwner, observerPokemons)
         viewModel.pokemonsList.observe(viewLifecycleOwner, observerPokemonList)
 
+        getPokemons()
+
+        binding.recyclerViewPokemons.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    getPokemons()
+                }
+            }
+        })
+    }
+
+    private fun getPokemons() {
         viewModel.getPokemons()
     }
 

@@ -6,6 +6,7 @@ import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.models.PokemonListItem
 import com.klemer.pokedexapp.services.RetrofitService
+import com.klemer.pokedexapp.singletons.APICount
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,11 +19,12 @@ class PokedexRepository {
 
     fun getPokemons(callback: (PokemonList) -> Unit) {
 
-        API.getPokemons(50, 0).enqueue(object : Callback<PokemonList> {
+        API.getPokemons(50, APICount.offsetCount).enqueue(object : Callback<PokemonList> {
 
             override fun onResponse(call: Call<PokemonList>, response: Response<PokemonList>) {
                 response.body()?.let { pokemonList ->
                     callback(pokemonList)
+                    APICount.offsetCount += 50
                 }
             }
 

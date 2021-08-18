@@ -10,7 +10,7 @@ data class PokemonList(
     val nextPage: String,
 
     @SerializedName("results")
-    val pokemons: List<PokemonListItem>
+    val pokemons: MutableList<PokemonListItem>
 )
 
 data class PokemonListItem(

@@ -19,8 +19,9 @@ import com.klemer.pokedexapp.models.PokemonListItem
 import com.klemer.pokedexapp.models.Types
 import java.util.*
 
-class PokemonListAdapter(val pokemonList: List<PokemonListItem>) :
+class PokemonListAdapter() :
     RecyclerView.Adapter<PokemonListViewHolder>() {
+    private var pokemonList: MutableList<PokemonListItem> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonListViewHolder {
         val view =
             LayoutInflater.from(parent.context)
@@ -33,6 +34,11 @@ class PokemonListAdapter(val pokemonList: List<PokemonListItem>) :
     }
 
     override fun getItemCount() = pokemonList.size
+
+    fun updateList(newList: MutableList<PokemonListItem>) {
+        pokemonList.addAll(newList)
+        notifyDataSetChanged()
+    }
 
 }
 
