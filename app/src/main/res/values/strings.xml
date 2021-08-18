@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">PokedexApp</string>
     <string name="app_title">Pokedéx</string>
+
+    <string name="app_description">Search for Pokémon by name or using the National Pokédex number.</string>
+    <string name="search_hint">What Pokémon are you looking for?</string>
+
 </resources>
