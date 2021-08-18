@@ -7,6 +7,8 @@ import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.models.PokemonListItem
 import com.klemer.pokedexapp.services.RetrofitService
 import com.klemer.pokedexapp.singletons.APICount
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,23 +31,27 @@ class PokedexRepository {
             }
 
             override fun onFailure(call: Call<PokemonList>, t: Throwable) {
-                TODO("Not yet implemented")
+                println(t.localizedMessage)
             }
 
         })
     }
 
-    fun getSpecificPokemon(id: String, callback: (PokemonItem) -> Unit) {
-        API.getPokemonInfo(id).enqueue(object : Callback<PokemonItem> {
+    suspend fun getSpecificPokemon(id: String, callback: (PokemonItem) -> Unit) {
 
-            override fun onResponse(call: Call<PokemonItem>, response: Response<PokemonItem>) {
-                response.body()?.let { callback(it) }
-            }
+        return withContext(Dispatchers.Default) {
+            API.getPokemonInfo(id).enqueue(object : Callback<PokemonItem> {
 
-            override fun onFailure(call: Call<PokemonItem>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
+                override fun onResponse(call: Call<PokemonItem>, response: Response<PokemonItem>) {
+                    response.body()?.let { callback(it) }
+                }
 
-        })
+                override fun onFailure(call: Call<PokemonItem>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+        }
+
     }
 }

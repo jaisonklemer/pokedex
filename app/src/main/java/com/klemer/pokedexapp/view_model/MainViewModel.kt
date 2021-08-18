@@ -3,9 +3,12 @@ package com.klemer.pokedexapp.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.models.PokemonListItem
 import com.klemer.pokedexapp.repository.PokedexRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,19 +31,20 @@ class MainViewModel : ViewModel() {
 
     fun treatPokemonList(list: PokemonList) {
         var count = 0;
-        for (poke in list.pokemons) {
-            repository.getSpecificPokemon(getPokemonId(poke)) {
-                poke.types = it.types
-                poke.id = it.id
-                count++
+        viewModelScope.launch(Dispatchers.Default) {
+            for (poke in list.pokemons) {
+                repository.getSpecificPokemon(getPokemonId(poke)) {
+                    poke.types = it.types
+                    poke.id = it.id
+                    count++
 
-                if (count == list.pokemons.size) {
-                    _pokemonsList.value = list
+                    if (count == list.pokemons.size) {
+                        _pokemonsList.value = list
+                    }
                 }
+
             }
-
         }
-
     }
 
 

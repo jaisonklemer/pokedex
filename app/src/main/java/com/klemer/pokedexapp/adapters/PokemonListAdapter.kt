@@ -58,6 +58,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     @SuppressLint("ResourceType")
     fun bind(pokemon: PokemonListItem, position: Int) {
         val typesSize = pokemon.types.size
+
         val type1 = TypeColorEnum.valueOf(
             pokemon.types[0].type.typeName.uppercase(
                 Locale.getDefault()
@@ -122,6 +123,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
         itemView.findViewById<ImageView>(R.id.pokemonImageView).apply {
             val svgImageUrl = "${PokemonImageEnum.SVG.url}${pokemon.id}.svg"
+
             loadImageUrl(svgImageUrl, this, pokemon.id, context)
         }
     }
