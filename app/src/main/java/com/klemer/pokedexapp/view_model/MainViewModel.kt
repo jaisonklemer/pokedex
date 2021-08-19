@@ -61,7 +61,7 @@ class MainViewModel : ViewModel() {
                 _finalPokemonsList.value = pokemonList
             }
 
-            callback(null, error)
+            callback(pokemon, error)
         }
 
     }

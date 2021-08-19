@@ -41,7 +41,11 @@ class PokedexRepository {
         API.getPokemonInfo(idOrName).enqueue(object : Callback<PokemonItem> {
 
             override fun onResponse(call: Call<PokemonItem>, response: Response<PokemonItem>) {
-                response.body()?.let { callback(it, null) }
+                if (response.body() != null) {
+                    callback(response.body(), null)
+                } else {
+                    callback(null, null)
+                }
             }
 
             override fun onFailure(call: Call<PokemonItem>, t: Throwable) {
