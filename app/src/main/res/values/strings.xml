@@ -5,5 +5,6 @@
     <string name="app_description">Search for Pokémon by name or using the National Pokédex number.</string>
     <string name="search_hint">What Pokémon are you looking for?</string>
     <string name="no_pokemon_found">Nenhum Pokémon encontrado!</string>
+    <string name="generations_filter_description">Use search for generations to explore your Pokémon!</string>
 
 </resources>

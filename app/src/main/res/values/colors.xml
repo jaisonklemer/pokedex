@@ -10,5 +10,6 @@
     <color name="psychic_color">#EA5D60</color>
     <color name="search_input_color">#F2F2F2</color>
     <color name="background_pokeball_color">#37FFFFFF</color>
+    <color name="title_color">#17171B</color>
 
 </resources>

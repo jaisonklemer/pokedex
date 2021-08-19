@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.klemer.pokedexapp.databinding.MainFragmentBinding
 import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.view_model.MainViewModel
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.klemer.pokedexapp.extensions.hideKeyboard
 import com.klemer.pokedexapp.extensions.showToast
@@ -65,6 +67,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         getPokemons()
         addRecyclerViewScrollListener()
         bindSearch()
+
+        requireActivity().findViewById<ImageView>(R.id.imgGenerationFilter).setOnClickListener {
+            openBottomSheet()
+        }
     }
 
     fun addRecyclerViewScrollListener() {
@@ -78,6 +84,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 }
             }
         })
+    }
+
+    fun openBottomSheet() {
+        val bottom = BottomSheetDialog(requireContext())
+        bottom.setContentView(R.layout.bottom_modal_generations)
+        bottom.show()
     }
 
     private fun bindSearch() {

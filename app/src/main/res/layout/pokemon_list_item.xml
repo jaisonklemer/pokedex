@@ -67,7 +67,8 @@
                         android:layout_height="15dp"
                         android:layout_marginStart="5dp"
                         app:tint="@color/white"
-                        tools:src="@drawable/ic_bug" />
+                        tools:src="@drawable/ic_bug"
+                        android:contentDescription="TODO" />
 
                     <TextView
                         android:id="@+id/textViewType1"
