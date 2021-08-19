@@ -1,7 +1,6 @@
 package com.klemer.pokedexapp.repository
 
 import com.klemer.pokedexapp.endpoints.PokedexEndpoint
-import com.klemer.pokedexapp.extensions.setPropertyValue
 import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.models.PokemonListItem
@@ -37,21 +36,18 @@ class PokedexRepository {
         })
     }
 
-    suspend fun getSpecificPokemon(id: String, callback: (PokemonItem) -> Unit) {
+    fun getSpecificPokemon(idOrName: String, callback: (PokemonItem?, String?) -> Unit) {
 
-        return withContext(Dispatchers.Default) {
-            API.getPokemonInfo(id).enqueue(object : Callback<PokemonItem> {
+        API.getPokemonInfo(idOrName).enqueue(object : Callback<PokemonItem> {
 
-                override fun onResponse(call: Call<PokemonItem>, response: Response<PokemonItem>) {
-                    response.body()?.let { callback(it) }
-                }
+            override fun onResponse(call: Call<PokemonItem>, response: Response<PokemonItem>) {
+                response.body()?.let { callback(it, null) }
+            }
 
-                override fun onFailure(call: Call<PokemonItem>, t: Throwable) {
-                    TODO("Not yet implemented")
-                }
+            override fun onFailure(call: Call<PokemonItem>, t: Throwable) {
+                callback(null, t.localizedMessage)
+            }
 
-            })
-        }
-
+        })
     }
 }

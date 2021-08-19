@@ -3,11 +3,14 @@ package com.klemer.pokedexapp.models
 import com.google.gson.annotations.SerializedName
 
 data class PokemonItem(
+    @SerializedName("name")
+    val name: String,
+
     @SerializedName("types")
     val types: List<Types>,
 
     @SerializedName("id")
-    val id: Int
+    val id: Int,
 )
 
 data class Types(
@@ -15,7 +18,7 @@ data class Types(
     val slot: String,
 
     @SerializedName("type")
-    val type: PokemonType
+    val type: PokemonType,
 )
 
 data class PokemonType(
@@ -23,5 +26,5 @@ data class PokemonType(
     val typeName: String,
 
     @SerializedName("url")
-    val typeUrl: String
+    val typeUrl: String,
 )

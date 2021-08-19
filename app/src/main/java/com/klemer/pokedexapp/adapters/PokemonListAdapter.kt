@@ -3,22 +3,18 @@ package com.klemer.pokedexapp.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
-import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYouListener
 import com.google.android.material.card.MaterialCardView
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.enums.PokemonImageEnum
 import com.klemer.pokedexapp.enums.TypeColorEnum
 import com.klemer.pokedexapp.models.PokemonListItem
-import com.klemer.pokedexapp.models.Types
 import java.util.*
 import android.graphics.drawable.PictureDrawable
 import android.os.Handler
@@ -26,11 +22,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 
 
-class PokemonListAdapter() :
+class PokemonListAdapter :
     RecyclerView.Adapter<PokemonListViewHolder>() {
     private var pokemonList: MutableList<PokemonListItem> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonListViewHolder {
@@ -46,10 +41,15 @@ class PokemonListAdapter() :
 
     override fun getItemCount() = pokemonList.size
 
-    fun updateList(newList: MutableList<PokemonListItem>) {
-        pokemonList.addAll(newList)
+    fun updateList(newList: MutableList<PokemonListItem>?, clearList: Boolean) {
+        if (clearList) {
+            pokemonList = mutableListOf()
+        } else {
+            pokemonList.addAll(newList!!)
+        }
         notifyDataSetChanged()
     }
+
 
 }
 
@@ -111,6 +111,10 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
             itemView.findViewById<TextView>(R.id.textViewType2).apply {
                 text = type2.toString().lowercase().capitalize()
             }
+        } else {
+            itemView.findViewById<MaterialCardView>(R.id.layoutType2).apply {
+                visibility = View.GONE
+            }
         }
 
         itemView.findViewById<TextView>(R.id.txtViewPokemonName).apply {
@@ -132,7 +136,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         imageUrl: String,
         imageView: ImageView,
         pokemonId: Int,
-        context: Context
+        context: Context,
     ) {
         val pngImageUrl = "${PokemonImageEnum.PNG.url}$pokemonId.png"
 
@@ -148,7 +152,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                     e: GlideException?,
                     model: Any?,
                     target: Target<PictureDrawable>?,
-                    isFirstResource: Boolean
+                    isFirstResource: Boolean,
                 ): Boolean {
 
                     Handler().postDelayed(Runnable {
@@ -166,7 +170,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                     model: Any?,
                     target: Target<PictureDrawable>?,
                     dataSource: DataSource?,
-                    isFirstResource: Boolean
+                    isFirstResource: Boolean,
                 ): Boolean {
                     return false
                 }

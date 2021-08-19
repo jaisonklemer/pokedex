@@ -10,7 +10,7 @@ data class PokemonList(
     val nextPage: String,
 
     @SerializedName("results")
-    val pokemons: MutableList<PokemonListItem>
+    val pokemons: MutableList<PokemonListItem>,
 )
 
 data class PokemonListItem(
@@ -22,5 +22,17 @@ data class PokemonListItem(
 
     var id: Int,
 
-    var types: List<Types>
-)
+    var types: List<Types>,
+) {
+    companion object {
+        fun fromPokemonItem(pokemon: PokemonItem): PokemonListItem {
+            return PokemonListItem(
+                name = pokemon.name,
+                url = "",
+                id = pokemon.id,
+                types = pokemon.types
+            )
+        }
+    }
+
+}

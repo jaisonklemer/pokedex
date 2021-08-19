@@ -4,22 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.models.PokemonListItem
 import com.klemer.pokedexapp.repository.PokedexRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainViewModel : ViewModel() {
 
     private val _pokemons = MutableLiveData<PokemonList>()
     val pokemons: LiveData<PokemonList> = _pokemons
 
-    private val _pokemonsList = MutableLiveData<PokemonList>()
-    val pokemonsList: LiveData<PokemonList> = _pokemonsList
+    private val _finalPokemonsList = MutableLiveData<PokemonList?>()
+    val finalPokemonsList: LiveData<PokemonList?> = _finalPokemonsList
 
     private val repository = PokedexRepository()
 
@@ -33,20 +31,38 @@ class MainViewModel : ViewModel() {
         var count = 0;
         viewModelScope.launch(Dispatchers.Default) {
             for (poke in list.pokemons) {
-                repository.getSpecificPokemon(getPokemonId(poke)) {
-                    poke.types = it.types
-                    poke.id = it.id
-                    count++
+                repository.getSpecificPokemon(getPokemonId(poke)) { pokemon, error ->
+                    if (pokemon != null) {
+                        poke.types = pokemon.types
+                        poke.id = pokemon.id
+                        count++
 
-                    if (count == list.pokemons.size) {
-                        _pokemonsList.value = list
+                        if (count == list.pokemons.size) {
+                            _finalPokemonsList.value = list
+                        }
                     }
-                }
 
+                }
             }
         }
     }
 
+    fun searchPokemon(idOrName: String, callback: (PokemonItem?, String?) -> Unit) {
+        repository.getSpecificPokemon(idOrName) { pokemon, error ->
+            if (pokemon != null) {
+                val pokemonListItem = PokemonListItem.fromPokemonItem(pokemon)
+                val listOf = mutableListOf<PokemonListItem>()
+                listOf.add(pokemonListItem)
+
+                val pokemonList = PokemonList(0, "", listOf)
+
+                _finalPokemonsList.value = pokemonList
+            }
+
+            callback(null, error)
+        }
+
+    }
 
     private fun getPokemonId(pokemon: PokemonListItem): String {
         val list = pokemon.url.split("/")
@@ -54,5 +70,7 @@ class MainViewModel : ViewModel() {
         return list[size - 2]
     }
 
-
+    fun clearPokemonList() {
+        _finalPokemonsList.value = null
+    }
 }

@@ -3,9 +3,9 @@ package com.klemer.pokedexapp.view.fragments
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView.OnEditorActionListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klemer.pokedexapp.R
@@ -13,10 +13,11 @@ import com.klemer.pokedexapp.adapters.PokemonListAdapter
 import com.klemer.pokedexapp.databinding.MainFragmentBinding
 import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.view_model.MainViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
+import com.klemer.pokedexapp.extensions.hideKeyboard
+import com.klemer.pokedexapp.singletons.APICount
+import com.klemer.pokedexapp.view.activities.MainActivity
 
 
 class MainFragment : Fragment(R.layout.main_fragment) {
@@ -34,9 +35,13 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         viewModel.treatPokemonList(it)
     }
 
-    private val observerPokemonList = Observer<PokemonList> {
+    private val observerPokemonList = Observer<PokemonList?> {
         showProgress(false)
-        adapter.updateList(it.pokemons)
+        if (it != null) {
+            adapter.updateList(it.pokemons, false)
+        } else {
+            adapter.updateList(null, true)
+        }
         binding.recyclerViewPokemons.layoutManager = linearLayoutManager
     }
 
@@ -53,17 +58,52 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         binding.recyclerViewPokemons.adapter = adapter
 
         viewModel.pokemons.observe(viewLifecycleOwner, observerPokemons)
-        viewModel.pokemonsList.observe(viewLifecycleOwner, observerPokemonList)
+        viewModel.finalPokemonsList.observe(viewLifecycleOwner, observerPokemonList)
 
         getPokemons()
+        addRecyclerViewScrollListener()
+        bindSearch()
+    }
 
+    fun addRecyclerViewScrollListener() {
         binding.recyclerViewPokemons.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE &&
+                    !APICount.isSearch
+                ) {
                     getPokemons()
                 }
             }
+        })
+    }
+
+    private fun bindSearch() {
+        val act = requireActivity() as? MainActivity
+        val textEditSearch = act?.findViewById<TextInputEditText>(R.id.textEditSearch)
+
+        textEditSearch?.setOnEditorActionListener(OnEditorActionListener { view, actionId, event ->
+            viewModel.clearPokemonList()
+            requireContext().hideKeyboard(view)
+
+            val querySearch: String = textEditSearch.text.toString()
+
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if (querySearch.isNotEmpty()) {
+                    showProgress(true)
+                    viewModel.searchPokemon(textEditSearch.text.toString()) { pokemonItem, error ->
+                        println(pokemonItem)
+                        println(error)
+                        APICount.isSearch = true
+                    }
+                } else {
+                    APICount.offsetCount = 0
+                    APICount.isSearch = false
+                    getPokemons()
+                }
+                return@OnEditorActionListener true
+            }
+            false
         })
     }
 
