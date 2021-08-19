@@ -7,11 +7,25 @@
     tools:context=".view.activities.MainActivity">
 
     <include
-        android:id="@+id/include"
-        layout="@layout/app_title"
+        android:id="@+id/toolbarFilters"
+        layout="@layout/top_filters_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/app_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarFilters" />
+
 
     <FrameLayout
         android:id="@+id/container"
@@ -21,4 +35,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
