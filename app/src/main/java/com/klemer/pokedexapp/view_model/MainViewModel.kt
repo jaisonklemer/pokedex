@@ -28,8 +28,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun treatPokemonList(list: PokemonList) {
-        var count = 0;
+        var count = 0
+
         viewModelScope.launch(Dispatchers.Default) {
+
             for (poke in list.pokemons) {
                 repository.getSpecificPokemon(getPokemonId(poke)) { pokemon, error ->
                     if (pokemon != null) {

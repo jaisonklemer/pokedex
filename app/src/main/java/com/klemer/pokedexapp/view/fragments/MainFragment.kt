@@ -37,6 +37,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private val observerPokemonList = Observer<PokemonList?> {
         showProgress(false)
+
         if (it != null) {
             adapter.updateList(it.pokemons, false)
         } else {
