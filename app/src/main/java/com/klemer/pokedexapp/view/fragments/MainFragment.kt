@@ -16,6 +16,7 @@ import com.klemer.pokedexapp.view_model.MainViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.klemer.pokedexapp.extensions.hideKeyboard
+import com.klemer.pokedexapp.extensions.showToast
 import com.klemer.pokedexapp.singletons.APICount
 import com.klemer.pokedexapp.view.activities.MainActivity
 
@@ -83,28 +84,33 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         val act = requireActivity() as? MainActivity
         val textEditSearch = act?.findViewById<TextInputEditText>(R.id.textEditSearch)
 
-        textEditSearch?.setOnEditorActionListener(OnEditorActionListener { view, actionId, event ->
+        textEditSearch?.setOnEditorActionListener(OnEditorActionListener { view, actionId, _ ->
             viewModel.clearPokemonList()
             requireContext().hideKeyboard(view)
 
             val querySearch: String = textEditSearch.text.toString()
 
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (querySearch.isNotEmpty()) {
-                    showProgress(true)
-                    viewModel.searchPokemon(textEditSearch.text.toString()) { pokemonItem, error ->
-                        println(pokemonItem)
-                        println(error)
-                        APICount.isSearch = true
+            when (actionId) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    if (querySearch.isNotEmpty()) {
+                        showProgress(true)
+                        viewModel.searchPokemon(querySearch) { pokemonItem, error ->
+                            println(pokemonItem)
+                            println(error)
+                            if (pokemonItem == null) {
+                                requireContext().showToast(getString(R.string.no_pokemon_found))
+                                showProgress(false)
+                            }
+                            APICount.isSearch = true
+                        }
+                    } else {
+                        APICount.offsetCount = 0
+                        APICount.isSearch = false
+                        getPokemons()
                     }
-                } else {
-                    APICount.offsetCount = 0
-                    APICount.isSearch = false
-                    getPokemons()
                 }
-                return@OnEditorActionListener true
             }
-            false
+            true
         })
     }
 
