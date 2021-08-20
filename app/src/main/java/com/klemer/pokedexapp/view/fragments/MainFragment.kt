@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.adapters.PokemonListAdapter
@@ -17,6 +18,7 @@ import com.klemer.pokedexapp.view_model.MainViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
+import com.klemer.pokedexapp.adapters.GenBottomModalAdapter
 import com.klemer.pokedexapp.extensions.hideKeyboard
 import com.klemer.pokedexapp.extensions.showToast
 import com.klemer.pokedexapp.singletons.APICount
@@ -33,6 +35,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var binding: MainFragmentBinding
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: PokemonListAdapter
+    private lateinit var bottomSheetView: View
+    private lateinit var bottomSheetRecyclerView: RecyclerView
+    private lateinit var bottomSheetDialog: BottomSheetDialog
 
     private val observerPokemons = Observer<PokemonList> {
         viewModel.treatPokemonList(it)
@@ -47,6 +52,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             adapter.updateList(null, true)
         }
         binding.recyclerViewPokemons.layoutManager = linearLayoutManager
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loadFilterComponents()
+        openBottomSheet()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -126,6 +137,30 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             binding.loadingProgressBar.visibility = View.VISIBLE
         } else {
             binding.loadingProgressBar.visibility = View.GONE
+        }
+    }
+
+    fun loadFilterComponents() {
+        bottomSheetView = View.inflate(requireContext(), R.layout.bottom_modal_generations, null)
+        bottomSheetRecyclerView =
+            bottomSheetView.findViewById(R.id.recyclerViewGenerations)
+
+        bottomSheetRecyclerView.adapter = GenBottomModalAdapter() {
+            println("Generation item $it")
+        }
+        bottomSheetRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+
+
+        /*
+        * Bottom Sheet Dialog for Generations Filter
+        * */
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetView)
+    }
+
+    fun openBottomSheet() {
+        requireActivity().findViewById<ImageView>(R.id.imgGenerationFilter).setOnClickListener {
+            bottomSheetDialog.show()
         }
     }
 

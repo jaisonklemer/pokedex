@@ -42,6 +42,7 @@ class GenBottomModalAdapter(val filterClick: (Int) -> Unit) :
 class GenBottomModalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var card = itemView.findViewById<MaterialCardView>(R.id.firstGenCar)
+    var txtTitle = itemView.findViewById<TextView>(R.id.textViewGenerationName)
 
     fun bind(generation: GenerationsFilterEnum, position: Int, current: Int) {
 
@@ -49,9 +50,17 @@ class GenBottomModalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
             card.apply {
                 background.setTint(getResources().getColor(R.color.psychic_color))
             }
+
+            txtTitle.apply {
+                setTextColor(getResources().getColor(R.color.white))
+            }
         } else {
             card.apply {
                 background.setTint(getResources().getColor(R.color.generation_bg_color))
+            }
+
+            txtTitle.apply {
+                setTextColor(getResources().getColor(R.color.text_color_gray))
             }
         }
 
@@ -68,7 +77,7 @@ class GenBottomModalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
             setImageResource(generation.icon3)
         }
 
-        itemView.findViewById<TextView>(R.id.textViewGenerationName).apply {
+        txtTitle.apply {
             text = generation.title
         }
     }
