@@ -1,6 +1,7 @@
 package com.klemer.pokedexapp.repository
 
 import com.klemer.pokedexapp.endpoints.PokedexEndpoint
+import com.klemer.pokedexapp.models.PokemonFromGeneration
 import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.models.PokemonListItem
@@ -16,7 +17,7 @@ import kotlin.reflect.KMutableProperty1
 class PokedexRepository {
 
     private val API = RetrofitService()
-        .getInstance("https://pokeapi.co/api/v2/").create(PokedexEndpoint::class.java)
+        .getInstance("https://pokeapi.co/").create(PokedexEndpoint::class.java)
 
     fun getPokemons(callback: (PokemonList) -> Unit) {
 
@@ -32,7 +33,6 @@ class PokedexRepository {
             override fun onFailure(call: Call<PokemonList>, t: Throwable) {
                 println(t.localizedMessage)
             }
-
         })
     }
 
@@ -50,6 +50,21 @@ class PokedexRepository {
 
             override fun onFailure(call: Call<PokemonItem>, t: Throwable) {
                 callback(null, t.localizedMessage)
+            }
+        })
+    }
+
+    fun getPokemonFromGeneration(genNameOrId: String, callback: (PokemonFromGeneration) -> Unit) {
+        API.getPokemonFromGeneration(genNameOrId).enqueue(object : Callback<PokemonFromGeneration> {
+            override fun onResponse(
+                call: Call<PokemonFromGeneration>,
+                response: Response<PokemonFromGeneration>,
+            ) {
+                if (response.code() == 200) response.body()?.let { callback(it) }
+            }
+
+            override fun onFailure(call: Call<PokemonFromGeneration>, t: Throwable) {
+                TODO("Not yet implemented")
             }
 
         })

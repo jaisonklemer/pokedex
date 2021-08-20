@@ -145,17 +145,32 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         bottomSheetRecyclerView =
             bottomSheetView.findViewById(R.id.recyclerViewGenerations)
 
+        /**
+         * Bottom Sheet Dialog for Generations Filter
+         * */
+
+
+        bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(bottomSheetView)
+
         bottomSheetRecyclerView.adapter = GenBottomModalAdapter() {
-            println("Generation item $it")
+            val gen = it + 1
+
+            if (APICount.genFilterSelected != gen) {
+                /**
+                 * Dissmis dialog
+                 * */
+                bottomSheetDialog.hide()
+                viewModel.clearPokemonList()
+                showProgress(true)
+                viewModel.getPokemonFromGeneration(gen.toString()) {
+                    APICount.genFilterSelected = gen
+                }
+            }
+
         }
         bottomSheetRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-
-        /*
-        * Bottom Sheet Dialog for Generations Filter
-        * */
-        bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(bottomSheetView)
     }
 
     fun openBottomSheet() {

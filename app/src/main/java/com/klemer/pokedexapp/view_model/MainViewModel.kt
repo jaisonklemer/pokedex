@@ -56,12 +56,20 @@ class MainViewModel : ViewModel() {
                 val listOf = mutableListOf<PokemonListItem>()
                 listOf.add(pokemonListItem)
 
-                val pokemonList = PokemonList(0, "", listOf)
+                val pokemonList = PokemonList(listOf)
 
                 _finalPokemonsList.value = pokemonList
             }
 
             callback(pokemon, error)
+        }
+
+    }
+
+    fun getPokemonFromGeneration(idOrName: String, callback: () -> Unit) {
+        repository.getPokemonFromGeneration(idOrName) {
+            _pokemons.value = PokemonList(it.pokemon)
+            callback()
         }
 
     }
