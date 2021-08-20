@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/firstGenCar"
+        android:layout_width="@dimen/generation_card_width"
+        android:layout_height="@dimen/generation_card_height"
+        android:layout_marginTop="@dimen/generation_card_margin_top"
+        android:backgroundTint="@color/generation_bg_color"
+        app:cardCornerRadius="@dimen/generation_card_corner_radius"
+        app:cardElevation="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:backgroundTint="@color/psychic_color">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:elevation="5dp"
+            android:src="@drawable/ic_pattern" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/firstIconGen"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    tools:src="@drawable/ic_generation_1_001" />
+
+                <ImageView
+                    android:id="@+id/secondIconGen"
+                    android:layout_width="45dp"
+                    android:layout_height="match_parent"
+                    tools:src="@drawable/ic_generation_1_002" />
+
+                <ImageView
+                    android:id="@+id/thirdGenCarIcon"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    tools:src="@drawable/ic_generation_1_003" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewGenerationName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/sf_pro_display_regular"
+                android:textAlignment="center"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="@string/generation_i" />
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
