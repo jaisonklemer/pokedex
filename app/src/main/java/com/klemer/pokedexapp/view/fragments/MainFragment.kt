@@ -68,9 +68,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         addRecyclerViewScrollListener()
         bindSearch()
 
-        requireActivity().findViewById<ImageView>(R.id.imgGenerationFilter).setOnClickListener {
-            openBottomSheet()
-        }
+//        requireActivity().findViewById<ImageView>(R.id.imgGenerationFilter).setOnClickListener {
+//            openBottomSheet()
+//        }
     }
 
     fun addRecyclerViewScrollListener() {

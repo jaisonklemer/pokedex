@@ -1,30 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/default_margin"
     android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bottom_modal_corners"
-        android:orientation="vertical">
+        android:layout_margin="@dimen/default_margin">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/sf_pro_display_regular"
-            android:text="Generations"
+            android:text="@string/generations"
             android:textColor="@color/title_color"
             android:textSize="26sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/generations_filter_description" />
+            android:text="@string/generations_filter_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/generation_card_margin_top"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/firstGenCar"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:backgroundTint="@color/psychic_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:src="@drawable/ic_pattern"
+                        android:layout_marginStart="10dp"
+                        android:elevation="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_height="wrap_content"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:src="@drawable/ic_generation_1_001" />
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/ic_generation_1_002" />
+
+                            <ImageView
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:src="@drawable/ic_generation_1_003" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/linearLayout"
+                            android:layout_marginTop="10dp"
+                            android:fontFamily="@font/sf_pro_display_regular"
+                            android:text="@string/generation_i"
+                            android:textAlignment="center"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:layout_editor_absoluteY="110dp" />
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/secondGenCard"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:backgroundTint="@color/generation_bg_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/thirdGenCar"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:layout_marginTop="@dimen/generation_card_margin_top"
+                    android:backgroundTint="@color/generation_bg_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/firstGenCar" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/fourthGenCar"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:layout_marginTop="@dimen/generation_card_margin_top"
+                    android:backgroundTint="@color/generation_bg_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/secondGenCard" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/fifthGenCar"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:layout_marginTop="@dimen/generation_card_margin_top"
+                    android:backgroundTint="@color/generation_bg_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/thirdGenCar" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/sixthGenCar"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:layout_marginTop="@dimen/generation_card_margin_top"
+                    android:backgroundTint="@color/generation_bg_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fourthGenCar" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/seventhGenCar"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:layout_marginTop="@dimen/generation_card_margin_top"
+                    android:backgroundTint="@color/generation_bg_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/fifthGenCar" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/eighthGenCar"
+                    android:layout_width="@dimen/generation_card_width"
+                    android:layout_height="@dimen/generation_card_height"
+                    android:layout_marginTop="@dimen/generation_card_margin_top"
+                    android:backgroundTint="@color/generation_bg_color"
+                    app:cardCornerRadius="@dimen/generation_card_corner_radius"
+                    app:cardElevation="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sixthGenCar" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </LinearLayout>
 </LinearLayout>

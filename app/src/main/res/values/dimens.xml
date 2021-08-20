@@ -2,4 +2,8 @@
 <resources>
     <dimen name="default_margin">20dp</dimen>
     <dimen name="mtrl_textinput_box_stroke_width_default">10dp</dimen>
+    <dimen name="generation_card_corner_radius">10dp</dimen>
+    <dimen name="generation_card_margin_top">35dp</dimen>
+    <dimen name="generation_card_width">160dp</dimen>
+    <dimen name="generation_card_height">130dp</dimen>
 </resources>

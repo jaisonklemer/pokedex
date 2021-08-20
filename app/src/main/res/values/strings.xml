@@ -6,5 +6,7 @@
     <string name="search_hint">What Pokémon are you looking for?</string>
     <string name="no_pokemon_found">Nenhum Pokémon encontrado!</string>
     <string name="generations_filter_description">Use search for generations to explore your Pokémon!</string>
+    <string name="generations">Generations</string>
+    <string name="generation_i">Generation I</string>
 
 </resources>
