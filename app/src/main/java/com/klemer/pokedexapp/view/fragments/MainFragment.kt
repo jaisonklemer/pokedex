@@ -67,10 +67,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         getPokemons()
         addRecyclerViewScrollListener()
         bindSearch()
-
-//        requireActivity().findViewById<ImageView>(R.id.imgGenerationFilter).setOnClickListener {
-//            openBottomSheet()
-//        }
     }
 
     fun addRecyclerViewScrollListener() {
@@ -84,12 +80,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                 }
             }
         })
-    }
-
-    fun openBottomSheet() {
-        val bottom = BottomSheetDialog(requireContext())
-        bottom.setContentView(R.layout.bottom_modal_generations)
-        bottom.show()
     }
 
     private fun bindSearch() {
