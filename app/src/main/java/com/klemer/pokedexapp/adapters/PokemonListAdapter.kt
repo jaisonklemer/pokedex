@@ -83,11 +83,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
         itemView.findViewById<ImageView>(R.id.imageType1).apply {
             setImageResource(
-                TypeColorEnum.valueOf(
-                    pokemon.types[0].type.typeName.uppercase(
-                        Locale.getDefault()
-                    )
-                ).icon
+                type1.icon
             )
         }
 
