@@ -7,8 +7,7 @@ import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.models.PokemonListItem
 import com.klemer.pokedexapp.services.RetrofitService
 import com.klemer.pokedexapp.singletons.APICount
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,54 +18,47 @@ class PokedexRepository {
     private val API = RetrofitService()
         .getInstance("https://pokeapi.co/").create(PokedexEndpoint::class.java)
 
-    fun getPokemons(callback: (PokemonList) -> Unit) {
+    fun getPokemons(callback: (PokemonList?, String?) -> Unit) {
 
-        API.getPokemons(50, APICount.offsetCount).enqueue(object : Callback<PokemonList> {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = API.getPokemons(APICount.resultCount, APICount.offsetCount)
 
-            override fun onResponse(call: Call<PokemonList>, response: Response<PokemonList>) {
-                response.body()?.let { pokemonList ->
-                    callback(pokemonList)
-                    APICount.offsetCount += 50
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    response.body()?.let { callback(it, null) }
+                    APICount.offsetCount += APICount.resultCount
+                } else {
+                    callback(null, response.errorBody().toString())
                 }
             }
-
-            override fun onFailure(call: Call<PokemonList>, t: Throwable) {
-                println(t.localizedMessage)
-            }
-        })
+        }
     }
 
     fun getSpecificPokemon(idOrName: String, callback: (PokemonItem?, String?) -> Unit) {
 
-        API.getPokemonInfo(idOrName).enqueue(object : Callback<PokemonItem> {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = API.getPokemonInfo(idOrName)
 
-            override fun onResponse(call: Call<PokemonItem>, response: Response<PokemonItem>) {
-                if (response.body() != null) {
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
                     callback(response.body(), null)
                 } else {
                     callback(null, null)
                 }
             }
-
-            override fun onFailure(call: Call<PokemonItem>, t: Throwable) {
-                callback(null, t.localizedMessage)
-            }
-        })
+        }
     }
 
     fun getPokemonFromGeneration(genNameOrId: String, callback: (PokemonFromGeneration) -> Unit) {
-        API.getPokemonFromGeneration(genNameOrId).enqueue(object : Callback<PokemonFromGeneration> {
-            override fun onResponse(
-                call: Call<PokemonFromGeneration>,
-                response: Response<PokemonFromGeneration>,
-            ) {
-                if (response.code() == 200) response.body()?.let { callback(it) }
-            }
 
-            override fun onFailure(call: Call<PokemonFromGeneration>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = API.getPokemonFromGeneration(genNameOrId)
 
-        })
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
+                    response.body()?.let { callback(it) }
+                }
+            }
+        }
     }
 }

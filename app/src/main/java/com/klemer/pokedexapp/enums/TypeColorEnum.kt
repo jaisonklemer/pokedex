@@ -1,6 +1,5 @@
 package com.klemer.pokedexapp.enums
 
-import android.graphics.drawable.Drawable
 import androidx.annotation.LayoutRes
 import com.klemer.pokedexapp.R
 

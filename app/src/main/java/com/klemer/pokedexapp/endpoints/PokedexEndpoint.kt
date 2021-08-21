@@ -4,6 +4,7 @@ import com.klemer.pokedexapp.models.PokemonFromGeneration
 import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.models.PokemonList
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -11,14 +12,14 @@ import retrofit2.http.Query
 interface PokedexEndpoint {
 
     @GET("api/v2/pokemon")
-    fun getPokemons(
+    suspend fun getPokemons(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
-    ): Call<PokemonList>
+    ): Response<PokemonList>
 
     @GET("api/v2/pokemon/{id}")
-    fun getPokemonInfo(@Path("id") id: String): Call<PokemonItem>
+   suspend fun getPokemonInfo(@Path("id") id: String): Response<PokemonItem>
 
     @GET("api/v2/generation/{id}")
-    fun getPokemonFromGeneration(@Path("id") id: String): Call<PokemonFromGeneration>
+    suspend fun getPokemonFromGeneration(@Path("id") id: String): Response<PokemonFromGeneration>
 }

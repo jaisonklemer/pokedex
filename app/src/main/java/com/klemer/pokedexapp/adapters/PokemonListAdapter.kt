@@ -18,6 +18,8 @@ import com.klemer.pokedexapp.models.PokemonListItem
 import java.util.*
 import android.graphics.drawable.PictureDrawable
 import android.os.Handler
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -36,7 +38,7 @@ class PokemonListAdapter :
     }
 
     override fun onBindViewHolder(holder: PokemonListViewHolder, position: Int) {
-        holder.bind(pokemonList[position], position)
+        holder.bind(pokemonList[position])
     }
 
     override fun getItemCount() = pokemonList.size
@@ -56,79 +58,73 @@ class PokemonListAdapter :
 class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @SuppressLint("ResourceType")
-    fun bind(pokemon: PokemonListItem, position: Int) {
+    fun bind(pokemon: PokemonListItem) {
         val typesSize = pokemon.types.size
 
-        val type1 = TypeColorEnum.valueOf(
+        val pokemonType1 = TypeColorEnum.valueOf(
             pokemon.types[0].type.typeName.uppercase(
                 Locale.getDefault()
             )
         )
 
-        itemView.findViewById<MaterialCardView>(R.id.layoutType1).apply {
-            setCardBackgroundColor(Color.parseColor(type1.typeBadgeColor))
-        }
-
-        itemView.findViewById<MaterialCardView>(R.id.pokemonCard).apply {
-            setCardBackgroundColor(
-                Color.parseColor(
-                    type1.bgColor
-                )
-            )
-        }
-
-        itemView.findViewById<TextView>(R.id.textViewType1).apply {
-            text = type1.toString().lowercase().capitalize()
-        }
-
-        itemView.findViewById<ImageView>(R.id.imageType1).apply {
-            setImageResource(
-                type1.icon
-            )
-        }
+        setText(pokemon.name.capitalize(), R.id.txtViewPokemonName)
+        setText(pokemonType1.toString().lowercase().capitalize(), R.id.textViewType1)
+        setText("#${pokemon.id}", R.id.txtViewPokemonId)
+        setCardBackgroundColor(pokemonType1.typeBadgeColor, R.id.layoutType1)
+        setCardBackgroundColor(pokemonType1.bgColor, R.id.pokemonCard)
+        setImageResource(R.id.imageType1, pokemonType1.icon)
+        setPokemonImage(R.id.pokemonImageView, pokemon.id)
 
         if (typesSize > 1) {
 
-            val type2 = TypeColorEnum.valueOf(
+            val pokemonType2 = TypeColorEnum.valueOf(
                 pokemon.types[1].type.typeName.uppercase(
                     Locale.getDefault()
                 )
             )
+            setText(pokemonType2.toString().lowercase().capitalize(), R.id.textViewType2)
+            setCardBackgroundColor(pokemonType2.typeBadgeColor, R.id.layoutType2)
+            setImageResource(R.id.imageType2, pokemonType2.icon)
+            setVisibility<MaterialCardView>(R.id.layoutType2, true)
 
-            itemView.findViewById<MaterialCardView>(R.id.layoutType2).apply {
-                setCardBackgroundColor(Color.parseColor(type2.typeBadgeColor))
-                visibility = View.VISIBLE
-            }
-
-            itemView.findViewById<ImageView>(R.id.imageType2).apply {
-                setImageResource(type2.icon)
-            }
-
-            itemView.findViewById<TextView>(R.id.textViewType2).apply {
-                text = type2.toString().lowercase().capitalize()
-            }
         } else {
-            itemView.findViewById<MaterialCardView>(R.id.layoutType2).apply {
-                visibility = View.GONE
-            }
-        }
-
-        itemView.findViewById<TextView>(R.id.txtViewPokemonName).apply {
-            text = pokemon.name.capitalize()
-        }
-
-        itemView.findViewById<TextView>(R.id.txtViewPokemonId).apply {
-            "#${pokemon.id}".also { text = it }
-        }
-
-        itemView.findViewById<ImageView>(R.id.pokemonImageView).apply {
-            val svgImageUrl = "${PokemonImageEnum.SVG.url}${pokemon.id}.svg"
-
-            loadImageUrl(svgImageUrl, this, pokemon.id, context)
+            setVisibility<MaterialCardView>(R.id.layoutType2, false)
         }
     }
 
-    private fun loadImageUrl(
+    private fun setText(textMessage: String, @IdRes component: Int) {
+        itemView.findViewById<TextView>(component).apply {
+            text = textMessage
+        }
+    }
+
+    private fun <T : View?> setVisibility(@IdRes component: Int, visible: Boolean) {
+        itemView.findViewById<T>(component)?.apply {
+            visibility = if (visible) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun setImageResource(@IdRes imgView: Int, @DrawableRes imageResource: Int) {
+        itemView.findViewById<ImageView>(imgView).apply {
+            setImageResource(imageResource)
+        }
+    }
+
+    private fun setPokemonImage(@IdRes imgView: Int, imageId: Int) {
+        val svgImageUrl = "${PokemonImageEnum.SVG.url}${imageId}.svg"
+
+        itemView.findViewById<ImageView>(imgView).apply {
+            loadImageFromUrl(svgImageUrl, this, imageId, context)
+        }
+    }
+
+    private fun setCardBackgroundColor(color: String, @IdRes componentId: Int) {
+        itemView.findViewById<MaterialCardView>(componentId).apply {
+            setCardBackgroundColor(Color.parseColor(color))
+        }
+    }
+
+    private fun loadImageFromUrl(
         imageUrl: String,
         imageView: ImageView,
         pokemonId: Int,
@@ -173,7 +169,5 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
             })
             .into(imageView)
-
-
     }
 }
