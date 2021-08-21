@@ -50,16 +50,3 @@ enum class GenerationsFilterEnum(
         R.drawable.ic_generation_8_003),
 }
 
-object GENERATIONS {
-    val toList = listOf(
-        GenerationsFilterEnum.FIRST,
-        GenerationsFilterEnum.SECOND,
-        GenerationsFilterEnum.THIRD,
-        GenerationsFilterEnum.FOURTH,
-        GenerationsFilterEnum.FIFTH,
-        GenerationsFilterEnum.SIXTH,
-        GenerationsFilterEnum.SEVENTH,
-        GenerationsFilterEnum.EIGHTH,
-    )
-}
-

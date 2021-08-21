@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
-    private val _pokemons = MutableLiveData<PokemonList>()
-    val pokemons: LiveData<PokemonList> = _pokemons
+    private val _primaryPokemonList = MutableLiveData<PokemonList>()
+    val primaryPokemonList: LiveData<PokemonList> = _primaryPokemonList
 
     private val _finalPokemonsList = MutableLiveData<PokemonList?>()
     val finalPokemonsList: LiveData<PokemonList?> = _finalPokemonsList
@@ -22,28 +22,24 @@ class MainViewModel : ViewModel() {
     private val repository = PokedexRepository()
 
     fun getPokemons() {
-        repository.getPokemons {
-            _pokemons.value = it
+        repository.getPokemons { result, error ->
+            if (result != null)
+                _primaryPokemonList.value = result
         }
     }
 
     fun treatPokemonList(list: PokemonList) {
         var count = 0
+        for (poke in list.pokemons) {
+            repository.getSpecificPokemon(getPokemonId(poke)) { pokemon, error ->
+                if (pokemon != null) {
+                    poke.types = pokemon.types
+                    poke.id = pokemon.id
+                    count++
 
-        viewModelScope.launch(Dispatchers.Default) {
-
-            for (poke in list.pokemons) {
-                repository.getSpecificPokemon(getPokemonId(poke)) { pokemon, error ->
-                    if (pokemon != null) {
-                        poke.types = pokemon.types
-                        poke.id = pokemon.id
-                        count++
-
-                        if (count == list.pokemons.size) {
-                            _finalPokemonsList.value = list
-                        }
+                    if (count == list.pokemons.size) {
+                        _finalPokemonsList.value = list
                     }
-
                 }
             }
         }
@@ -56,9 +52,7 @@ class MainViewModel : ViewModel() {
                 val listOf = mutableListOf<PokemonListItem>()
                 listOf.add(pokemonListItem)
 
-                val pokemonList = PokemonList(listOf)
-
-                _finalPokemonsList.value = pokemonList
+                _finalPokemonsList.value = PokemonList(listOf)
             }
 
             callback(pokemon, error)
@@ -68,10 +62,9 @@ class MainViewModel : ViewModel() {
 
     fun getPokemonFromGeneration(idOrName: String, callback: () -> Unit) {
         repository.getPokemonFromGeneration(idOrName) {
-            _pokemons.value = PokemonList(it.pokemon)
+            _primaryPokemonList.value = PokemonList(it.pokemon)
             callback()
         }
-
     }
 
     private fun getPokemonId(pokemon: PokemonListItem): String {

@@ -39,11 +39,11 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var bottomSheetRecyclerView: RecyclerView
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
-    private val observerPokemons = Observer<PokemonList> {
+    private val observerPrimaryPokemonList = Observer<PokemonList> {
         viewModel.treatPokemonList(it)
     }
 
-    private val observerPokemonList = Observer<PokemonList?> {
+    private val observerFinalPokemonList = Observer<PokemonList?> {
         showProgress(false)
 
         if (it != null) {
@@ -51,7 +51,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         } else {
             adapter.updateList(null, true)
         }
-        binding.recyclerViewPokemons.layoutManager = linearLayoutManager
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,25 +69,29 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         binding = MainFragmentBinding.bind(view)
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        viewModel.primaryPokemonList.observe(viewLifecycleOwner, observerPrimaryPokemonList)
+        viewModel.finalPokemonsList.observe(viewLifecycleOwner, observerFinalPokemonList)
 
         linearLayoutManager = LinearLayoutManager(requireContext())
 
-        adapter = PokemonListAdapter()
-        binding.recyclerViewPokemons.adapter = adapter
-
-        viewModel.pokemons.observe(viewLifecycleOwner, observerPokemons)
-        viewModel.finalPokemonsList.observe(viewLifecycleOwner, observerPokemonList)
-
+        bindViewComponents()
         getPokemons()
         addRecyclerViewScrollListener()
         bindSearch()
     }
 
-    fun addRecyclerViewScrollListener() {
+    private fun bindViewComponents() {
+        adapter = PokemonListAdapter()
+        binding.recyclerViewPokemons.adapter = adapter
+        binding.recyclerViewPokemons.layoutManager = linearLayoutManager
+    }
+
+    private fun addRecyclerViewScrollListener() {
         binding.recyclerViewPokemons.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE &&
+                if (!recyclerView.canScrollVertically(1) &&
+                    newState == RecyclerView.SCROLL_STATE_IDLE &&
                     !APICount.isSearch
                 ) {
                     getPokemons()
@@ -112,8 +115,6 @@ class MainFragment : Fragment(R.layout.main_fragment) {
                     if (querySearch.isNotEmpty()) {
                         showProgress(true)
                         viewModel.searchPokemon(querySearch) { pokemonItem, error ->
-                            println(pokemonItem)
-                            println(error)
                             if (pokemonItem == null) {
                                 requireContext().showToast(getString(R.string.no_pokemon_found))
                                 showProgress(false)
@@ -144,7 +145,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         }
     }
 
-    fun loadFilterComponents() {
+    private fun loadFilterComponents() {
         bottomSheetView = View.inflate(requireContext(), R.layout.bottom_modal_generations, null)
         bottomSheetRecyclerView =
             bottomSheetView.findViewById(R.id.recyclerViewGenerations)
@@ -152,32 +153,29 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         /**
          * Bottom Sheet Dialog for Generations Filter
          * */
-
-
         bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(bottomSheetView)
 
-        bottomSheetRecyclerView.adapter = GenBottomModalAdapter() {
-            val gen = it + 1
+        bottomSheetRecyclerView.adapter = GenBottomModalAdapter { itemPosition ->
+            val generationId = itemPosition + 1
 
-            if (APICount.genFilterSelected != gen) {
+            if (APICount.genFilterSelected != generationId) {
                 /**
-                 * Dissmis dialog
+                 * Dismiss dialog
                  * */
                 bottomSheetDialog.hide()
                 viewModel.clearPokemonList()
                 showProgress(true)
-                viewModel.getPokemonFromGeneration(gen.toString()) {
-                    APICount.genFilterSelected = gen
+                viewModel.getPokemonFromGeneration(generationId.toString()) {
+                    APICount.genFilterSelected = generationId
                 }
             }
-
         }
         bottomSheetRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
     }
 
-    fun openBottomSheet() {
+    private fun openBottomSheet() {
         requireActivity().findViewById<ImageView>(R.id.imgGenerationFilter).setOnClickListener {
             bottomSheetDialog.show()
         }

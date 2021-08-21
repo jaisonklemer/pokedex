@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.klemer.pokedexapp.R
-import com.klemer.pokedexapp.enums.GENERATIONS
 import com.klemer.pokedexapp.enums.GenerationsFilterEnum
+import com.klemer.pokedexapp.singletons.GenerationsList
 
 class GenBottomModalAdapter(val filterClick: (Int) -> Unit) :
     RecyclerView.Adapter<GenBottomModalViewHolder>() {
@@ -26,7 +26,7 @@ class GenBottomModalAdapter(val filterClick: (Int) -> Unit) :
         holder: GenBottomModalViewHolder,
         @SuppressLint("RecyclerView") position: Int,
     ) {
-        holder.bind(GENERATIONS.toList[position], position, currentItem)
+        holder.bind(GenerationsList.get[position], position, currentItem)
 
         holder.itemView.setOnClickListener {
             currentItem = position
@@ -36,7 +36,7 @@ class GenBottomModalAdapter(val filterClick: (Int) -> Unit) :
 
     }
 
-    override fun getItemCount() = GENERATIONS.toList.size
+    override fun getItemCount() = GenerationsList.get.size
 }
 
 class GenBottomModalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

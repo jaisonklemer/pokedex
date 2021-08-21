@@ -4,4 +4,5 @@ object APICount {
     var offsetCount = 0
     var isSearch = false
     var genFilterSelected: Int? = null
+    val resultCount = 50
 }
