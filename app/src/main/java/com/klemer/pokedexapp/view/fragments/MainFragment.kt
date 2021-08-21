@@ -63,6 +63,10 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /**
+         * Reset API offset count when the fragment is created*/
+        APICount.offsetCount = 0
+
         binding = MainFragmentBinding.bind(view)
 
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -101,7 +105,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
             viewModel.clearPokemonList()
             requireContext().hideKeyboard(view)
 
-            val querySearch: String = textEditSearch.text.toString()
+            val querySearch: String = textEditSearch.text.toString().lowercase()
 
             when (actionId) {
                 EditorInfo.IME_ACTION_SEARCH -> {
