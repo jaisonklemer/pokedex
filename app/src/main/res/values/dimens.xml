@@ -6,4 +6,5 @@
     <dimen name="generation_card_margin_top">35dp</dimen>
     <dimen name="generation_card_width">160dp</dimen>
     <dimen name="generation_card_height">130dp</dimen>
+    <dimen name="pokemon_name">26sp</dimen>
 </resources>
