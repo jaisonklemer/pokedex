@@ -14,7 +14,6 @@ import com.google.android.material.card.MaterialCardView
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.enums.PokemonImageEnum
 import com.klemer.pokedexapp.enums.TypeColorEnum
-import com.klemer.pokedexapp.models.PokemonListItem
 import java.util.*
 import android.graphics.drawable.PictureDrawable
 import android.os.Handler
@@ -25,11 +24,12 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.klemer.pokedexapp.models.PokemonItem
 
 
 class PokemonListAdapter :
     RecyclerView.Adapter<PokemonListViewHolder>() {
-    private var pokemonList: MutableList<PokemonListItem> = mutableListOf()
+    private var pokemonList: MutableList<PokemonItem> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonListViewHolder {
         val view =
             LayoutInflater.from(parent.context)
@@ -43,7 +43,7 @@ class PokemonListAdapter :
 
     override fun getItemCount() = pokemonList.size
 
-    fun updateList(newList: MutableList<PokemonListItem>?, clearList: Boolean) {
+    fun updateList(newList: MutableList<PokemonItem>?, clearList: Boolean) {
         if (clearList) {
             pokemonList = mutableListOf()
         } else {
@@ -58,7 +58,7 @@ class PokemonListAdapter :
 class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @SuppressLint("ResourceType")
-    fun bind(pokemon: PokemonListItem) {
+    fun bind(pokemon: PokemonItem) {
         val typesSize = pokemon.types.size
 
         val pokemonType1 = TypeColorEnum.valueOf(
@@ -73,7 +73,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         setCardBackgroundColor(pokemonType1.typeBadgeColor, R.id.layoutType1)
         setCardBackgroundColor(pokemonType1.bgColor, R.id.pokemonCard)
         setImageResource(R.id.imageType1, pokemonType1.icon)
-        setPokemonImage(R.id.pokemonImageView, pokemon.id)
+        setPokemonImage(R.id.pokemonImageView, pokemon.id.toInt())
 
         if (typesSize > 1) {
 

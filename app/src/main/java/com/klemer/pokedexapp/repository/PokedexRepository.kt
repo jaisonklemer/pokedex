@@ -3,22 +3,17 @@ package com.klemer.pokedexapp.repository
 import com.klemer.pokedexapp.endpoints.PokedexEndpoint
 import com.klemer.pokedexapp.models.PokemonFromGeneration
 import com.klemer.pokedexapp.models.PokemonItem
-import com.klemer.pokedexapp.models.PokemonList
-import com.klemer.pokedexapp.models.PokemonListItem
+import com.klemer.pokedexapp.models.PokemonResponse
 import com.klemer.pokedexapp.services.RetrofitService
 import com.klemer.pokedexapp.singletons.APICount
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import kotlin.reflect.KMutableProperty1
 
 class PokedexRepository {
 
     private val API = RetrofitService()
         .getInstance("https://pokeapi.co/").create(PokedexEndpoint::class.java)
 
-    fun getPokemons(callback: (PokemonList?, String?) -> Unit) {
+    fun getPokemons(callback: (PokemonResponse?, String?) -> Unit) {
 
         CoroutineScope(Dispatchers.IO).launch {
             val response = API.getPokemons(APICount.resultCount, APICount.offsetCount)

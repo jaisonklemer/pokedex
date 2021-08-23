@@ -7,11 +7,18 @@ data class PokemonItem(
     val name: String,
 
     @SerializedName("types")
-    val types: List<Types>,
+    var types: List<Types>,
 
     @SerializedName("id")
-    val id: Int,
-)
+    var id: String,
+
+    @SerializedName("url")
+    val url: String,
+) {
+    fun getIdFromUrl(): String {
+        return url.split("/")[6]
+    }
+}
 
 data class Types(
     @SerializedName("slot")
