@@ -15,13 +15,16 @@
         <entry key="app/src/main/res/drawable/rounded_input_shape.xml" value="0.30666666666666664" />
         <entry key="app/src/main/res/font-v26/sf_font_family.xml" value="0.32051282051282054" />
         <entry key="app/src/main/res/font/sf_font_family.xml" value="0.32051282051282054" />
+        <entry key="app/src/main/res/layout/activity_pokemon_detail.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/layout/app_title.xml" value="0.335" />
         <entry key="app/src/main/res/layout/bottom_modal_generation_item.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/bottom_modal_generations.xml" value="0.335" />
         <entry key="app/src/main/res/layout/bottom_modal_item.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/main_fragment.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/pokemon_detail_fragment.xml" value="0.23673469387755103" />
         <entry key="app/src/main/res/layout/pokemon_list_item.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/pokemon_type_badge.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/layout/search_input.xml" value="0.375" />
         <entry key="app/src/main/res/layout/top_filters_layout.xml" value="0.335" />
       </map>
