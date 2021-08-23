@@ -7,7 +7,7 @@ import com.klemer.pokedexapp.databinding.MainActivityBinding
 import com.klemer.pokedexapp.view.fragments.MainFragment
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: MainActivityBinding
 

@@ -3,6 +3,7 @@ package com.klemer.pokedexapp.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import android.os.Handler
 import android.view.View
@@ -43,9 +44,10 @@ class BindingComponentsUtil(private var holder: View) {
 
     fun setPokemonImage(@IdRes imgView: Int, imageId: Int) {
         val svgImageUrl = "${PokemonImageEnum.SVG.url}${imageId}.svg"
+        val pngImageUrl = "${PokemonImageEnum.PNG.url}$imageId.png"
 
         holder.findViewById<ImageView>(imgView).apply {
-            loadImageFromUrl(svgImageUrl, this, imageId, context)
+            loadImageFromUrl(svgImageUrl, this, context, pngImageUrl, true)
         }
     }
 
@@ -97,11 +99,55 @@ class BindingComponentsUtil(private var holder: View) {
     private fun loadImageFromUrl(
         imageUrl: String,
         imageView: ImageView,
-        pokemonId: Int,
         context: Context,
+        fallbackUrl: String?,
+        isSVGImage: Boolean,
     ) {
-        val pngImageUrl = "${PokemonImageEnum.PNG.url}$pokemonId.png"
 
+        if (isSVGImage) {
+            loadSvgImageFromUrl(imageUrl, imageView, context, fallbackUrl)
+        } else {
+            Glide
+                .with(context)
+                .load(imageUrl)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        if (fallbackUrl != null) {
+                            Handler().postDelayed(Runnable {
+                                Glide
+                                    .with(context)
+                                    .load(fallbackUrl)
+                                    .into(imageView)
+                            }, 100)
+                        }
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean,
+                    ): Boolean {
+                        return false
+                    }
+                })
+                .into(imageView)
+        }
+    }
+
+    private fun loadSvgImageFromUrl(
+        imageUrl: String,
+        imageView: ImageView,
+        context: Context,
+        fallbackUrl: String?,
+    ) {
         val requestBuilder = GlideToVectorYou
             .init()
             .with(context)
@@ -116,14 +162,14 @@ class BindingComponentsUtil(private var holder: View) {
                     target: Target<PictureDrawable>?,
                     isFirstResource: Boolean,
                 ): Boolean {
-
-                    Handler().postDelayed(Runnable {
-                        Glide
-                            .with(context)
-                            .load(pngImageUrl)
-                            .into(imageView)
-                    }, 100)
-
+                    if (fallbackUrl != null) {
+                        Handler().postDelayed(Runnable {
+                            Glide
+                                .with(context)
+                                .load(fallbackUrl)
+                                .into(imageView)
+                        }, 100)
+                    }
                     return false
                 }
 
@@ -136,7 +182,6 @@ class BindingComponentsUtil(private var holder: View) {
                 ): Boolean {
                     return false
                 }
-
             })
             .into(imageView)
     }
