@@ -1,5 +1,6 @@
 package com.klemer.pokedexapp.view.fragments
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -39,8 +40,9 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     private lateinit var bottomSheetRecyclerView: RecyclerView
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
+
     private val observerPrimaryPokemonList = Observer<PokemonResponse> {
-        viewModel.treatPokemonList(it)
+        viewModel.treatPokemonList(it, requireContext())
     }
 
     private val observerFinalPokemonList = Observer<PokemonResponse?> {
@@ -134,7 +136,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     private fun getPokemons() {
         showProgress(true)
-        viewModel.getPokemons()
+        viewModel.fetchAllFromDatabase(requireContext())
     }
 
     private fun showProgress(show: Boolean) {

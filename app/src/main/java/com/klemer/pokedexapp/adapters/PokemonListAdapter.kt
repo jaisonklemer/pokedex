@@ -61,11 +61,13 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     fun bind(pokemon: PokemonItem) {
         val typesSize = pokemon.types.size
 
-        val pokemonType1 = TypeColorEnum.valueOf(
-            pokemon.types[0].type.typeName.uppercase(
-                Locale.getDefault()
+        val pokemonType1 = pokemon.types.get(0).type.typeName.let {
+            TypeColorEnum.valueOf(
+                it.uppercase(
+                    Locale.getDefault()
+                )
             )
-        )
+        }
 
         setText(pokemon.name.capitalize(), R.id.txtViewPokemonName)
         setText(pokemonType1.toString().lowercase().capitalize(), R.id.textViewType1)
@@ -78,7 +80,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         if (typesSize > 1) {
 
             val pokemonType2 = TypeColorEnum.valueOf(
-                pokemon.types[1].type.typeName.uppercase(
+                pokemon.types!![1].type.typeName.uppercase(
                     Locale.getDefault()
                 )
             )
