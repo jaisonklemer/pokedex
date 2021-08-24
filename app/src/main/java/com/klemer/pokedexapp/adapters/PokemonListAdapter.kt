@@ -9,15 +9,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.enums.TypeColorEnum
-import com.klemer.pokedexapp.models.PokemonListItem
 import java.util.*
+import android.graphics.drawable.PictureDrawable
+import android.os.Handler
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.klemer.pokedexapp.models.PokemonItem
+
+
+class PokemonListAdapter :
 import com.klemer.pokedexapp.interfaces.PokemonClickListener
 import com.klemer.pokedexapp.utils.BindingComponentsUtil
 
 
 class PokemonListAdapter(val clickListener: PokemonClickListener) :
     RecyclerView.Adapter<PokemonListViewHolder>() {
-    private var pokemonList: MutableList<PokemonListItem> = mutableListOf()
+    private var pokemonList: MutableList<PokemonItem> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonListViewHolder {
         val view =
             LayoutInflater.from(parent.context)
@@ -34,7 +46,7 @@ class PokemonListAdapter(val clickListener: PokemonClickListener) :
 
     override fun getItemCount() = pokemonList.size
 
-    fun updateList(newList: MutableList<PokemonListItem>?, clearList: Boolean) {
+    fun updateList(newList: MutableList<PokemonItem>?, clearList: Boolean) {
         if (clearList) {
             pokemonList = mutableListOf()
         } else {
@@ -49,14 +61,16 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
     private val bindingUtil = BindingComponentsUtil(itemView)
 
     @SuppressLint("ResourceType")
-    fun bind(pokemon: PokemonListItem) {
+    fun bind(pokemon: PokemonItem) {
         val typesSize = pokemon.types.size
 
-        val pokemonType1 = TypeColorEnum.valueOf(
-            pokemon.types[0].type.typeName.uppercase(
-                Locale.getDefault()
+        val pokemonType1 = pokemon.types.get(0).type.typeName.let {
+            TypeColorEnum.valueOf(
+                it.uppercase(
+                    Locale.getDefault()
+                )
             )
-        )
+        }
 
         bindingUtil.setText(pokemon.name.capitalize(), R.id.txtViewPokemonName)
         bindingUtil.setText("#${pokemon.id}", R.id.txtViewPokemonId)
@@ -73,7 +87,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         if (typesSize > 1) {
 
             val pokemonType2 = TypeColorEnum.valueOf(
-                pokemon.types[1].type.typeName.uppercase(
+                pokemon.types!![1].type.typeName.uppercase(
                     Locale.getDefault()
                 )
             )

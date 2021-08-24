@@ -1,5 +1,6 @@
 package com.klemer.pokedexapp.view.fragments
 
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.adapters.PokemonListAdapter
 import com.klemer.pokedexapp.databinding.MainFragmentBinding
-import com.klemer.pokedexapp.models.PokemonList
 import com.klemer.pokedexapp.view_model.MainViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,6 +22,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.klemer.pokedexapp.adapters.GenBottomModalAdapter
 import com.klemer.pokedexapp.extensions.hideKeyboard
 import com.klemer.pokedexapp.extensions.showToast
+import com.klemer.pokedexapp.models.PokemonResponse
 import com.klemer.pokedexapp.interfaces.PokemonClickListener
 import com.klemer.pokedexapp.singletons.APICount
 import com.klemer.pokedexapp.view.activities.MainActivity
@@ -42,11 +43,12 @@ class MainFragment : Fragment(R.layout.main_fragment), PokemonClickListener {
     private lateinit var bottomSheetRecyclerView: RecyclerView
     private lateinit var bottomSheetDialog: BottomSheetDialog
 
-    private val observerPrimaryPokemonList = Observer<PokemonList> {
-        viewModel.treatPokemonList(it)
+
+    private val observerPrimaryPokemonList = Observer<PokemonResponse> {
+        viewModel.treatPokemonList(it, requireContext())
     }
 
-    private val observerFinalPokemonList = Observer<PokemonList?> {
+    private val observerFinalPokemonList = Observer<PokemonResponse?> {
         showProgress(false)
 
         if (it != null) {
@@ -137,7 +139,7 @@ class MainFragment : Fragment(R.layout.main_fragment), PokemonClickListener {
 
     private fun getPokemons() {
         showProgress(true)
-        viewModel.getPokemons()
+        viewModel.fetchAllFromDatabase(requireContext())
     }
 
     private fun showProgress(show: Boolean) {

@@ -1,44 +1,40 @@
 package com.klemer.pokedexapp.view_model
 
-import androidx.lifecycle.LiveData
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.klemer.pokedexapp.models.PokemonItem
-import com.klemer.pokedexapp.models.PokemonList
-import com.klemer.pokedexapp.models.PokemonListItem
+import com.klemer.pokedexapp.models.PokemonResponse
 import com.klemer.pokedexapp.repository.PokedexRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
-    private val _primaryPokemonList = MutableLiveData<PokemonList>()
-    val primaryPokemonList: LiveData<PokemonList> = _primaryPokemonList
+    val primaryPokemonList = MutableLiveData<PokemonResponse>()
 
-    private val _finalPokemonsList = MutableLiveData<PokemonList?>()
-    val finalPokemonsList: LiveData<PokemonList?> = _finalPokemonsList
-
+    val finalPokemonsList = MutableLiveData<PokemonResponse?>()
     private val repository = PokedexRepository()
 
-    fun getPokemons() {
-        repository.getPokemons { result, error ->
-            if (result != null)
-                _primaryPokemonList.value = result
+    fun getPokemons(context: Context) {
+        repository.getPokemons(context) { result, error ->
+            if (result != null) {
+                primaryPokemonList.value = result
+            }
+
         }
     }
 
-    fun treatPokemonList(list: PokemonList) {
+    fun treatPokemonList(list: PokemonResponse, context: Context) {
         var count = 0
-        for (poke in list.pokemons) {
-            repository.getSpecificPokemon(getPokemonId(poke)) { pokemon, error ->
-                if (pokemon != null) {
-                    poke.types = pokemon.types
-                    poke.id = pokemon.id
+        for (pokemon in list.pokemons) {
+            repository.getSpecificPokemon(pokemon.getIdFromUrl()) { pokemonResult, error ->
+                if (pokemonResult != null) {
+                    pokemon.types = pokemonResult.types
+                    pokemon.id = pokemonResult.id
                     count++
 
                     if (count == list.pokemons.size) {
-                        _finalPokemonsList.value = list
+                        finalPokemonsList.value = list
+                        repository.insertIntoDatabase(list.pokemons)
                     }
                 }
             }
@@ -48,11 +44,9 @@ class MainViewModel : ViewModel() {
     fun searchPokemon(idOrName: String, callback: (PokemonItem?, String?) -> Unit) {
         repository.getSpecificPokemon(idOrName) { pokemon, error ->
             if (pokemon != null) {
-                val pokemonListItem = PokemonListItem.fromPokemonItem(pokemon)
-                val listOf = mutableListOf<PokemonListItem>()
-                listOf.add(pokemonListItem)
-
-                _finalPokemonsList.value = PokemonList(listOf)
+                val pokemonItem = mutableListOf<PokemonItem>()
+                pokemonItem.add(pokemon)
+                finalPokemonsList.value = PokemonResponse(pokemonItem)
             }
 
             callback(pokemon, error)
@@ -62,18 +56,24 @@ class MainViewModel : ViewModel() {
 
     fun getPokemonFromGeneration(idOrName: String, callback: () -> Unit) {
         repository.getPokemonFromGeneration(idOrName) {
-            _primaryPokemonList.value = PokemonList(it.pokemon)
+            primaryPokemonList.value = PokemonResponse(it.pokemon)
             callback()
         }
     }
 
-    private fun getPokemonId(pokemon: PokemonListItem): String {
-        val list = pokemon.url.split("/")
-        val size = list.size
-        return list[size - 2]
+    fun clearPokemonList() {
+        finalPokemonsList.value = null
     }
 
-    fun clearPokemonList() {
-        _finalPokemonsList.value = null
+    fun fetchAllFromDatabase(context: Context) {
+
+        val listOf = repository.fetchAllFromDatabase(context)
+
+        if (listOf != null && listOf.isNotEmpty()) {
+            finalPokemonsList.value = PokemonResponse(listOf)
+        } else {
+            getPokemons(context)
+        }
+
     }
 }
