@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.models.PokemonResponse
 import com.klemer.pokedexapp.repository.PokedexRepository
+import com.klemer.pokedexapp.singletons.APICount
 
 class MainViewModel : ViewModel() {
 
@@ -68,12 +69,13 @@ class MainViewModel : ViewModel() {
     fun fetchAllFromDatabase(context: Context) {
 
         val listOf = repository.fetchAllFromDatabase(context)
+//        val lastIndex = repository.getLastIndex(context)
 
         if (listOf != null && listOf.isNotEmpty()) {
             finalPokemonsList.value = PokemonResponse(listOf)
         } else {
             getPokemons(context)
         }
-
     }
+
 }

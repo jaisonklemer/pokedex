@@ -3,7 +3,6 @@ package com.klemer.pokedexapp.repository
 import android.content.Context
 import com.klemer.pokedexapp.database.AppDatabase
 import com.klemer.pokedexapp.endpoints.PokedexEndpoint
-import com.klemer.pokedexapp.models.PokemonDetails
 import com.klemer.pokedexapp.models.PokemonFromGeneration
 import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.models.PokemonResponse
@@ -27,10 +26,9 @@ class PokedexRepository {
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-//                        insertIntoDatabase(response.body()!!.pokemons)
                         callback(it, null)
                     }
-                    APICount.offsetCount += APICount.resultCount
+//                    APICount.offsetCount += APICount.resultCount
                 } else {
                     callback(null, response.errorBody().toString())
                 }
@@ -69,8 +67,7 @@ class PokedexRepository {
     fun insertIntoDatabase(items: List<PokemonItem>) {
         val dao = AppDatabase.getDatabase(appContext).pokemonDAO()
         items.forEach { poke ->
-            val details = PokemonDetails(pokemon = poke, types = poke.types)
-            dao.insertDetails(details)
+            dao.insert(poke)
         }
     }
 
@@ -79,4 +76,11 @@ class PokedexRepository {
         val dao = AppDatabase.getDatabase(appContext).pokemonDAO()
         return dao.all()
     }
+
+//    fun getLastIndex(context: Context) : String{
+//        appContext = context
+//        val dao = AppDatabase.getDatabase(appContext).pokemonDAO()
+//        val item = dao.getLast()
+//        return item
+//    }
 }

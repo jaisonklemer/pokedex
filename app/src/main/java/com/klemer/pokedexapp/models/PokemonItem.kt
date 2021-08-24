@@ -1,16 +1,8 @@
 package com.klemer.pokedexapp.models
 
 import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
 import com.google.gson.annotations.SerializedName
 
-data class PokemonDetails(
-    @Embedded
-    val pokemon: PokemonItem,
-
-    @Relation(parentColumn = "types_pokemon_id", entityColumn = "pokemonFk", entity = Types::class)
-    val types: List<Types>,
-)
 
 @Entity
 data class PokemonItem(
@@ -40,8 +32,6 @@ data class Types(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "types_pokemon_id")
     val id: Int,
-    var pokemonFk: Long,
-
 
     @SerializedName("slot")
     val slot: String,
