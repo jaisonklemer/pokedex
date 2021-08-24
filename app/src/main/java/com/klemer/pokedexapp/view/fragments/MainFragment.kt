@@ -1,6 +1,7 @@
 package com.klemer.pokedexapp.view.fragments
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -22,11 +23,13 @@ import com.klemer.pokedexapp.adapters.GenBottomModalAdapter
 import com.klemer.pokedexapp.extensions.hideKeyboard
 import com.klemer.pokedexapp.extensions.showToast
 import com.klemer.pokedexapp.models.PokemonResponse
+import com.klemer.pokedexapp.interfaces.PokemonClickListener
 import com.klemer.pokedexapp.singletons.APICount
 import com.klemer.pokedexapp.view.activities.MainActivity
+import com.klemer.pokedexapp.view.activities.PokemonDetailActivity
 
 
-class MainFragment : Fragment(R.layout.main_fragment) {
+class MainFragment : Fragment(R.layout.main_fragment), PokemonClickListener {
 
     companion object {
         fun newInstance() = MainFragment()
@@ -83,7 +86,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
     }
 
     private fun bindViewComponents() {
-        adapter = PokemonListAdapter()
+        adapter = PokemonListAdapter(this)
         binding.recyclerViewPokemons.adapter = adapter
         binding.recyclerViewPokemons.layoutManager = linearLayoutManager
     }
@@ -181,6 +184,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         requireActivity().findViewById<ImageView>(R.id.imgGenerationFilter).setOnClickListener {
             bottomSheetDialog.show()
         }
+    }
+
+    override fun onPokemonClick(id: String) {
+        val activityDetail = Intent(requireContext(), PokemonDetailActivity::class.java)
+        activityDetail.putExtra("pokemonID", id)
+        startActivity(activityDetail)
     }
 
 }
