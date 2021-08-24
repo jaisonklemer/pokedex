@@ -1,7 +1,6 @@
 package com.klemer.pokedexapp.adapters
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,24 +9,12 @@ import com.google.android.material.card.MaterialCardView
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.enums.TypeColorEnum
 import java.util.*
-import android.graphics.drawable.PictureDrawable
-import android.os.Handler
-import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.klemer.pokedexapp.models.PokemonItem
-
-
-class PokemonListAdapter :
 import com.klemer.pokedexapp.interfaces.PokemonClickListener
+import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.utils.BindingComponentsUtil
 
 
-class PokemonListAdapter(val clickListener: PokemonClickListener) :
+class PokemonListAdapter(private val clickListener: PokemonClickListener) :
     RecyclerView.Adapter<PokemonListViewHolder>() {
     private var pokemonList: MutableList<PokemonItem> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonListViewHolder {
@@ -40,7 +27,7 @@ class PokemonListAdapter(val clickListener: PokemonClickListener) :
     override fun onBindViewHolder(holder: PokemonListViewHolder, position: Int) {
         holder.bind(pokemonList[position])
         holder.itemView.setOnClickListener {
-            clickListener.onPokemonClick(pokemonList[position].id.toString())
+            clickListener.onPokemonClick(pokemonList[position].id)
         }
     }
 
@@ -74,7 +61,7 @@ class PokemonListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
         bindingUtil.setText(pokemon.name.capitalize(), R.id.txtViewPokemonName)
         bindingUtil.setText("#${pokemon.id}", R.id.txtViewPokemonId)
-        bindingUtil.setPokemonImage(R.id.pokemonImageView, pokemon.id)
+        bindingUtil.setPokemonImage(R.id.pokemonImageView, pokemon.id.toInt())
 
         bindingUtil.configureBadgeType(
             R.id.cardBadgeLayout,

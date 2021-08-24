@@ -1,18 +1,13 @@
 package com.klemer.pokedexapp.view.fragments
 
-import android.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.klemer.pokedexapp.R
 import com.klemer.pokedexapp.databinding.PokemonDetailFragmentBinding
-import com.klemer.pokedexapp.enums.PokemonImageEnum
 import com.klemer.pokedexapp.enums.TypeColorEnum
 import com.klemer.pokedexapp.models.PokemonItem
 import com.klemer.pokedexapp.utils.BindingComponentsUtil
@@ -61,7 +56,7 @@ class PokemonDetailFragment : Fragment(R.layout.pokemon_detail_fragment) {
             )
         )
         bindingUtil.setLayoutBackgroundColor(pokemonType1.bgColor, binding.headerDetailLayout.id)
-        bindingUtil.setPokemonImage(binding.pokemonImageView.id, pokemon.id)
+        bindingUtil.setPokemonImage(binding.pokemonImageView.id, pokemon.id.toInt())
         bindingUtil.setText("#${pokemon.id}", binding.txtViewPokemonId.id)
         bindingUtil.setText(pokemon.name.capitalize(), binding.txtViewPokemonName.id)
 
